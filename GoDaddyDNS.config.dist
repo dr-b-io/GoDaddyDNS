@@ -1,7 +1,7 @@
 #!/bin/bash
 # this file should be updated with your information
 # and saved as GoDaddyDNS.config so your data is not overwritten
-# during a 'git pull' command
+# during a 'git pull' command or published to the world during a 'git push' command
 DOMAIN="EXAMPLE.COM";
 DNS="HOSTNAME";
 # account key
