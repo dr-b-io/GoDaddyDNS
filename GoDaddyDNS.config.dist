@@ -1,1 +1,19 @@
 #!/bin/bash
+DOMAIN="EXAMPLE.COM";
+DNS="HOSTNAME";
+CACHEFILE="${DNS}.${DOMAIN}";
+# account key
+KEY="MY_GODADDY_KEY";
+# account key secret
+SECRET="MY_GODADDY_SECRET";
+# time to live for the DNS entry
+# godaddy has a minimum of 600 seconds
+TTL="600";
+# email address (from and to)
+EMAIL="MYEMAILADDRESS";
+# email password - if 2fa is enabled you should be able 
+#to get an app password to work here
+EMAILPASSWORD="MYEMAILPASSWORD";
+# !!!
+# end user defined variables
+# !!!
