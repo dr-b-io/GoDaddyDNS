@@ -1,7 +1,7 @@
 #!/bin/bash
-# GoDaddy.shl
-# Brian Snelgrove
-# January 18, 2020
+# GoDaddyDNS.shl
+# Dr. B
+# January 31, 2020
 #
 # update GoDaddy DNS records
 # file to track old IP addresses is written
@@ -11,32 +11,28 @@
 # this script uses ssmtp to send emails if the DNS updates failed
 # it also updates/restores the configuration file for ssmtp - as such this should be run as root user
 
-# !!!
-# user defined variables, update them as needed
-# !!!
-# domain - TLD that is being targeted
-DOMAIN="EXAMPLE.COM";
-DNS="HOSTNAME";
-CACHEFILE="${DNS}.${DOMAIN}";
-# account key
-KEY="MY_GODADDY_KEY";
-# account key secret
-SECRET="MY_GODADDY_SECRET";
-# time to live for the DNS entry
-# godaddy has a minimum of 600 seconds
-TTL="600";
-# email address (from and to)
-EMAIL="MYEMAILADDRESS";
-# email password - if 2fa is enabled you should be able 
-#to get an app password to work here
-EMAILPASSWORD="MYEMAILPASSWORD";
-# !!!
-# end user defined variables
-# !!!
+command -v curl >/dev/null 2>&1 || { echo >&2 "This program requires cURL but it's not installed. To install try: 'sudo apt install curl' on Debian based systems."; return 1; }
+command -v ssmtp >/dev/null 2>&1 || { echo >&2 "This program requires ssmtp but it's not installed. To install try: 'sudo apt install ssmtp' on Debian based systems."; return 1; }
+
+FILE=GoDaddyDNS.config
+DISTFILE=GoDaddyDNS.config.dist
+if [ -f "$FILE" ]; then
+ . "$FILE"
+else
+ if [ -f "$DISTFILE" ]; then
+  echo "!!!~~~ ATTENTION ~~~!!!"
+  echo "Distribution file found, it should really be renamed ${FILE}";
+  echo "Attempting to run with distribution file";
+  . "$DISTFILE"
+ fi
+fi
+
+
+
 
 # make sure the script is being run as the root user
 if [[ $EUID -ne 0 ]]; then
- echo "This script must be run as root!";
+ echo "This script must be run as root so it can update/restore ssmtp configurations!";
  echo "Exiting.";
  echo "";
  echo "In a HUFF!";
