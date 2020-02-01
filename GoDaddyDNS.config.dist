@@ -1,19 +1,17 @@
 #!/bin/bash
+# this file should be updated with your information
+# and saved as GoDaddyDNS.config so your data is not overwritten
+# during a 'git pull' command
 DOMAIN="EXAMPLE.COM";
 DNS="HOSTNAME";
-CACHEFILE="${DNS}.${DOMAIN}";
 # account key
-KEY="MY_GODADDY_KEY";
+KEY="GODADDY_KEY";
 # account key secret
-SECRET="MY_GODADDY_SECRET";
-# time to live for the DNS entry
-# godaddy has a minimum of 600 seconds
+SECRET="GODADDY_SECRET";
+# time to live for the DNS entry - minimum of 5 mintues (600 seconds)
 TTL="600";
-# email address (from and to)
-EMAIL="MYEMAILADDRESS";
-# email password - if 2fa is enabled you should be able 
-#to get an app password to work here
-EMAILPASSWORD="MYEMAILPASSWORD";
-# !!!
-# end user defined variables
-# !!!
+# email information
+EMAIL="EMAILADDRESS";
+EMAILPASSWORD="EMAILPASSWORD";
+# port may not be needed (25 is the normal SMTP port but gmail uses 465)
+MAILHUB="EMAIL.SERVER:PORT"

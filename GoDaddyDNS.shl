@@ -8,27 +8,27 @@
 # must be executed in a location that can be written to!
 # . ./GoDaddy.shl must be used to execute!
 #
-# this script uses ssmtp to send emails if the DNS updates failed
+# this script uses ssmtp to send emails if the DNS update fails
 # it also updates/restores the configuration file for ssmtp - as such this should be run as root user
 
+# verify cURL and ssmtp are installed
 command -v curl >/dev/null 2>&1 || { echo >&2 "This program requires cURL but it's not installed. To install try: 'sudo apt install curl' on Debian based systems."; return 1; }
 command -v ssmtp >/dev/null 2>&1 || { echo >&2 "This program requires ssmtp but it's not installed. To install try: 'sudo apt install ssmtp' on Debian based systems."; return 1; }
 
+# see if the production config file exists, if not try falling back to the dist file
 FILE=GoDaddyDNS.config
 DISTFILE=GoDaddyDNS.config.dist
 if [ -f "$FILE" ]; then
+ echo "Configuration file found, sourcing contents";
  . "$FILE"
 else
  if [ -f "$DISTFILE" ]; then
   echo "!!!~~~ ATTENTION ~~~!!!"
-  echo "Distribution file found, it should really be renamed ${FILE}";
-  echo "Attempting to run with distribution file";
+  echo "Distribution file found, it should really be renamed ${FILE} and have its values updated so it will not be overwritten by a git pull.";
+  echo "Sourcing distribution file";
   . "$DISTFILE"
  fi
 fi
-
-
-
 
 # make sure the script is being run as the root user
 if [[ $EUID -ne 0 ]]; then
@@ -48,22 +48,21 @@ if [[ $OS != *"Ubuntu"* ]]; then
  echo "Process developed on Ubuntu systems but may work with other distros, use at your own risk!";
 fi
 
+# build the cachefile filename
+CACHEFILE="${DNS}.${DOMAIN}";
+
 # touch the temp file and make sure the process has write access to it
 # the script has to run as root, it should have access...
 touch "${CACHEFILE}" || { echo "Process unable to write to cache file: ${CACHEFILE}, exiting."; return; }
 echo "Able to access cache file (${CACHEFILE})";
 
-# this script requires ssmpt to be installed, make sure it is there
-command -v ssmtp >/dev/null 2>&1 || { echo >&2 "This process require ssmtp but it's not installed.  Exiting."; return; }
-
-echo "ssmtp installation found, backing up config file";
 # back up the ssmtp configuation
 cp /etc/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf.bak;
 
 # ssmtp configuation parameters, overwrite the existing file
 cat >/etc/ssmtp/ssmtp.conf <<EOL
 root=${EMAIL}
-mailhub=smtp.gmail.com:465
+mailhub=${MAILHUB}
 FromLineOverride=YES
 AuthUser=${EMAIL}
 AuthPass=${EMAILPASSWORD}
@@ -77,8 +76,8 @@ OLDIP=$(head -n 1 "${CACHEFILE}");
 echo "(${OLDIP}) found in ${CACHEFILE} as last known IP address - if blank ${CACHEFILE} does not contain an old IP address";
 
 # get this machines external IP address
-# dig would probably be better, but some networks (mine) block querying 
-# external DNS servers so use curl
+# dig would probably be better, but some networks (mine) block 
+# external DNS servers so use curl was the next best option
 IP=$(curl -s http://whatismyip.akamai.com/);
 echo "(${IP}) found as current IP address";
 
@@ -141,4 +140,3 @@ mv /etc/ssmtp/ssmtp.conf.bak /etc/ssmtp/ssmtp.conf;
 # final return - because programming
 echo "Process commplete, exiting";
 return;
-
