@@ -1,2 +1,4 @@
 # ignore the production configuraiton file
+# GoDaddyDNS.config.dist should be updated and renamed GoDaddyDNS.config
+# so updates are not overwritten or published during a git clone or git push
 GoDaddyDNS.config

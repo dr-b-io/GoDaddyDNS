@@ -3,13 +3,12 @@
 # Dr. B
 # January 31, 2020
 #
-# update GoDaddy DNS records
-# file to track old IP addresses is written
-# must be executed in a location that can be written to!
+# update specified GoDaddy DNS record to the local machines external IP address
+#
 # . ./GoDaddy.shl must be used to execute!
 #
-# this script uses ssmtp to send emails if the DNS update fails
-# it also updates/restores the configuration file for ssmtp - as such this should be run as root user
+# NO WARRANTY WRITTEN OR IMPLIED. AUTHOR CANNOT BE HELD RESPONSIBLE FOR ANY 
+# DIRECT OR INDIRECT DAMAGE FROM THE USE OF THIS SOFTWARE.
 
 # verify cURL and ssmtp are installed
 command -v curl >/dev/null 2>&1 || { echo >&2 "This program requires cURL but it's not installed. To install try: 'sudo apt install curl' on Debian based systems."; return 1; }
