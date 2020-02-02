@@ -14,9 +14,13 @@
 command -v curl >/dev/null 2>&1 || { echo >&2 "This program requires cURL but it's not installed. To install try: 'sudo apt install curl' on Debian based systems."; return 1; }
 command -v ssmtp >/dev/null 2>&1 || { echo >&2 "This program requires ssmtp but it's not installed. To install try: 'sudo apt install ssmtp' on Debian based systems."; return 1; }
 
+# get the current working directory
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 # see if the production config file exists, if not try falling back to the dist file
-FILE=GoDaddyDNS.config
-DISTFILE=GoDaddyDNS.config.dist
+FILE="$DIR/GoDaddyDNS.config";
+DISTFILE="$DIR/GoDaddyDNS.config.dist";
+
 if [ -f "$FILE" ]; then
  echo "Configuration file found, sourcing contents";
  . "$FILE"
